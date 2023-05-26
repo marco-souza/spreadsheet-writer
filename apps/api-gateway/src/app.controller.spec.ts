@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { VALID_INPUT } from '@shared/shared/tests/contants';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -17,6 +18,11 @@ describe('AppController', () => {
   describe('root', () => {
     it('should return "Hello World!"', () => {
       expect(appController.getHello()).toBe('Hello World!');
+    });
+
+    it('should return parsed csv', () => {
+      const output = appController.postSpreadsheet(VALID_INPUT);
+      expect(output.split(',')).toHaveLength(5);
     });
   });
 });
