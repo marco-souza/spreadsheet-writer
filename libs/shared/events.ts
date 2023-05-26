@@ -3,5 +3,6 @@ export enum WriterEvents {
 }
 
 export enum ServicesNames {
+  API_GATEWAY = 'API_GATEWAY',
   WRITER = 'WRITER_SERVICE',
 }
