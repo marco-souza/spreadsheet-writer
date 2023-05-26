@@ -1,18 +1,18 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { SpreadsheetInputDto } from '@shared/shared/interfaces/spreadsheet.dto';
+import { ClientProxy } from '@nestjs/microservices';
+import { ServicesNames, WriterEvents } from 'libs/shared/events';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  constructor(@Inject(ServicesNames.WRITER) private client: ClientProxy) {}
 
   @Post()
-  postSpreadsheet(@Body() body: SpreadsheetInputDto): string {
-    return this.appService.postSpreadsheet(body);
+  async postSpreadsheet(@Body() body: SpreadsheetInputDto) {
+    this.client.emit(WriterEvents.PROCESS_CSV, body);
+  }
+
+  async onApplicationBootstrap() {
+    await this.client.connect();
   }
 }
