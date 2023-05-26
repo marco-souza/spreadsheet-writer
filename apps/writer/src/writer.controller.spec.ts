@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WriterController } from './writer.controller';
-import { VALID_INPUT } from 'libs/shared/constants';
+import { VALID_INPUT } from '@shared/constants';
 import { KafkaContext } from '@nestjs/microservices';
 
 describe('WriterController', () => {

@@ -1,14 +1,14 @@
 import { Controller, Inject, Logger } from '@nestjs/common';
-import { SpreadsheetInputDto } from '@shared/shared/interfaces/spreadsheet.dto';
+import { SpreadsheetInputDto } from '@shared/interfaces/spreadsheet.dto';
 import {
   Ctx,
   EventPattern,
   KafkaContext,
   Payload,
 } from '@nestjs/microservices';
-import { ServicesNames, WriterEvents } from 'libs/shared/events';
+import { ServicesNames, WriterEvents } from '@shared/events';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { HEADER_VALUES } from 'libs/shared/constants';
+import { HEADER_VALUES } from '@shared/constants';
 
 const logger = new Logger(ServicesNames.WRITER);
 

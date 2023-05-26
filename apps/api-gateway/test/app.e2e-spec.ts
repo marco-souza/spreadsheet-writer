@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { VALID_INPUT } from 'libs/shared/constants';
+import { VALID_INPUT } from '@shared/constants';
 import { AppModule } from '../src/app.module';
 
 describe('AppController (e2e)', () => {

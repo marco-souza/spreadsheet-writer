@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Logger, Post } from '@nestjs/common';
-import { SpreadsheetInputDto } from '@shared/shared/interfaces/spreadsheet.dto';
+import { SpreadsheetInputDto } from '@shared/interfaces/spreadsheet.dto';
 import { ClientKafka } from '@nestjs/microservices';
-import { ServicesNames, WriterEvents } from 'libs/shared/events';
+import { ServicesNames, WriterEvents } from '@shared/events';
 
 const logger = new Logger(ServicesNames.API_GATEWAY);
 
