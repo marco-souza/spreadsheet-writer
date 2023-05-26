@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { WriterController } from './writer.controller';
-import { WriterService } from './writer.service';
+import { VALID_INPUT } from 'libs/shared/constants';
+import { KafkaContext } from '@nestjs/microservices';
 
 describe('WriterController', () => {
   let writerController: WriterController;
@@ -8,7 +9,7 @@ describe('WriterController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [WriterController],
-      providers: [WriterService],
+      providers: [],
     }).compile();
 
     writerController = app.get<WriterController>(WriterController);
@@ -16,7 +17,9 @@ describe('WriterController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(writerController.getHello()).toBe('Hello World!');
+      expect(writerController.processCSV(VALID_INPUT, {} as KafkaContext)).toBe(
+        'Hello World!',
+      );
     });
   });
 });

@@ -7,3 +7,5 @@ export const VALID_INPUT = {
   },
   internet: true,
 };
+
+export const HEADER_VALUES = ['Data', 'Message', 'Light', 'Color', 'Internet'];

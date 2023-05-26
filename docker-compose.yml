@@ -25,6 +25,8 @@ services:
   writer:
     build: .
     command: "pnpm start:dev writer"
+    env_file:
+      - .env
     networks:
       - internal
     volumes:
