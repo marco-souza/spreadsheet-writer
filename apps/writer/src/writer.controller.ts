@@ -1,4 +1,4 @@
-import { Controller, Logger } from '@nestjs/common';
+import { Controller, Inject, Logger } from '@nestjs/common';
 import { SpreadsheetInputDto } from '@shared/shared/interfaces/spreadsheet.dto';
 import {
   Ctx,
@@ -7,11 +7,14 @@ import {
   Payload,
 } from '@nestjs/microservices';
 import { ServicesNames, WriterEvents } from 'libs/shared/events';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const logger = new Logger(ServicesNames.WRITER);
 
 @Controller()
 export class WriterController {
+  constructor(@Inject('SPREADSHEET') private spreadsheet: GoogleSpreadsheet) {}
+
   @EventPattern(WriterEvents.PROCESS_CSV)
   processCSV(
     @Payload() data: SpreadsheetInputDto,
@@ -19,9 +22,18 @@ export class WriterController {
   ): string {
     logger.log(`Processing message ${ctx.getMessage()}`);
     const csv = this.parseToCSV(data);
-    logger.log(`Sending CSV ${csv}`);
-    // TODO: sent to spreadsheet
+
+    logger.log(`Publishing Spreadsheet ${csv}`);
+    this.persistOnSpreadsheet(csv);
+
     return csv;
+  }
+
+  private persistOnSpreadsheet(csv: string) {
+    const sheet = this.spreadsheet.sheetsByIndex[0]; // FIXME: check if exists, if not create
+    const rows = sheet.getRows();
+    logger.log({ rows, csv });
+    // TODO: continue
   }
 
   /** Returns a string like `"Data, Message, Light, Color, Internet"` */
