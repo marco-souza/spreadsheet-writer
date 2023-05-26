@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { VALID_INPUT } from '@shared/shared/tests/contants';
+import { AppModule } from '../src/app.module';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -12,6 +13,7 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
     await app.init();
   });
 
@@ -20,5 +22,20 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  it('/ (POST) (bad request)', () => {
+    const input = '{}';
+    return request(app.getHttpServer())
+      .post('/')
+      .send(input)
+      .expect(HttpStatus.BAD_REQUEST);
+  });
+
+  it('/ (POST)', () => {
+    return request(app.getHttpServer())
+      .post('/')
+      .send(VALID_INPUT)
+      .expect(HttpStatus.CREATED);
   });
 });
