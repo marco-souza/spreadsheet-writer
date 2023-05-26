@@ -6,7 +6,11 @@ import { ServicesNames } from 'libs/shared/events';
 @Module({
   imports: [
     ClientsModule.register([
-      { name: ServicesNames.WRITER, transport: Transport.TCP },
+      {
+        name: ServicesNames.WRITER,
+        transport: Transport.TCP,
+        options: { host: 'writer' },
+      },
     ]),
   ],
   controllers: [AppController],

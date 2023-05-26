@@ -7,6 +7,7 @@ async function bootstrap() {
     WriterModule,
     {
       transport: Transport.TCP, // TODO: kafka
+      options: { host: '0.0.0.0' },
     },
   );
   await app.listen();

@@ -1,0 +1,28 @@
+version: "3.8"
+
+networks:
+  api-gateway:
+    name: speadsheet-writer
+    driver: bridge
+
+services:
+  api-gateway:
+    build: .
+    command: pnpm start:dev api-gateway
+    ports:
+      - "3000:3000"
+    networks:
+      - api-gateway
+    volumes:
+      - .:/app
+    depends_on:
+      - writer
+
+  writer:
+    build: .
+    command: "pnpm start:dev writer"
+    networks:
+      - api-gateway
+    volumes:
+      - .:/app
+
