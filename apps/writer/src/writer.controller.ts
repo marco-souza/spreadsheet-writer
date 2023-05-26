@@ -1,12 +1,36 @@
-import { Controller, Get } from '@nestjs/common';
-import { WriterService } from './writer.service';
+import { Controller } from '@nestjs/common';
+import { SpreadsheetInputDto } from '@shared/shared/interfaces/spreadsheet.dto';
+import {
+  Ctx,
+  EventPattern,
+  // KafkaContext,
+  Payload,
+  TcpContext,
+} from '@nestjs/microservices';
+import { WriterEvents } from 'libs/shared/events';
 
 @Controller()
 export class WriterController {
-  constructor(private readonly writerService: WriterService) {}
+  @EventPattern(WriterEvents.PROCESS_CSV)
+  processCSV(
+    @Payload() data: SpreadsheetInputDto,
+    @Ctx() ctx: TcpContext,
+  ): string {
+    // TODO: use kafka
+    console.log(`Args: ${ctx.getArgs()}`);
+    const csv = this.parseToCSV(data);
+    console.log(`CSV: ${csv}`);
+    // TODO: sent to spreadsheet
+    return csv;
+  }
 
-  @Get()
-  getHello(): string {
-    return this.writerService.getHello();
+  /** Returns a string like `"Data, Message, Light, Color, Internet"` */
+  private parseToCSV({
+    date,
+    internet,
+    message,
+    payload,
+  }: SpreadsheetInputDto) {
+    return [date, message, payload.light, payload.color, internet].join(',');
   }
 }
