@@ -10,6 +10,7 @@
     "d:down": "docker-compose down",
     "d:logs": "docker-compose logs",
     "d:exec": "docker-compose exec",
+    "decrypt": "ansible-vault decrypt .env.encrypted --output .env",
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
