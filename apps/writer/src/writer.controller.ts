@@ -8,6 +8,7 @@ import {
 } from '@nestjs/microservices';
 import { ServicesNames, WriterEvents } from 'libs/shared/events';
 import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { HEADER_VALUES } from 'libs/shared/constants';
 
 const logger = new Logger(ServicesNames.WRITER);
 
@@ -16,24 +17,29 @@ export class WriterController {
   constructor(@Inject('SPREADSHEET') private spreadsheet: GoogleSpreadsheet) {}
 
   @EventPattern(WriterEvents.PROCESS_CSV)
-  processCSV(
+  async processCSV(
     @Payload() data: SpreadsheetInputDto,
     @Ctx() ctx: KafkaContext,
-  ): string {
+  ) {
     logger.log(`Processing message ${ctx.getMessage()}`);
     const csv = this.parseToCSV(data);
 
     logger.log(`Publishing Spreadsheet ${csv}`);
-    this.persistOnSpreadsheet(csv);
-
-    return csv;
+    await this.persistOnSpreadsheet(csv);
   }
 
-  private persistOnSpreadsheet(csv: string) {
-    const sheet = this.spreadsheet.sheetsByIndex[0]; // FIXME: check if exists, if not create
-    const rows = sheet.getRows();
-    logger.log({ rows, csv });
-    // TODO: continue
+  private async persistOnSpreadsheet(row: ParsedValue) {
+    // get the first sheet or create it
+    const sheet =
+      this.spreadsheet.sheetCount === 0
+        ? await this.spreadsheet.addSheet()
+        : this.spreadsheet.sheetsByIndex[0];
+
+    logger.log('Add Spreadsheet headers');
+    await sheet.setHeaderRow(HEADER_VALUES);
+
+    logger.log('Append a row');
+    await sheet.addRow(row);
   }
 
   /** Returns a string like `"Data, Message, Light, Color, Internet"` */
@@ -42,7 +48,9 @@ export class WriterController {
     internet,
     message,
     payload,
-  }: SpreadsheetInputDto) {
-    return [date, message, payload.light, payload.color, internet].join(',');
+  }: SpreadsheetInputDto): ParsedValue {
+    return [date, message, payload.light, payload.color, internet];
   }
 }
+
+type ParsedValue = [string, string, number, string, boolean];
