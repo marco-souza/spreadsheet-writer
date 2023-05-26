@@ -3,9 +3,8 @@ import { SpreadsheetInputDto } from '@shared/shared/interfaces/spreadsheet.dto';
 import {
   Ctx,
   EventPattern,
-  // KafkaContext,
+  KafkaContext,
   Payload,
-  TcpContext,
 } from '@nestjs/microservices';
 import { WriterEvents } from 'libs/shared/events';
 
@@ -14,7 +13,7 @@ export class WriterController {
   @EventPattern(WriterEvents.PROCESS_CSV)
   processCSV(
     @Payload() data: SpreadsheetInputDto,
-    @Ctx() ctx: TcpContext,
+    @Ctx() ctx: KafkaContext,
   ): string {
     // TODO: use kafka
     console.log(`Args: ${ctx.getArgs()}`);

@@ -8,8 +8,16 @@ import { ServicesNames } from 'libs/shared/events';
     ClientsModule.register([
       {
         name: ServicesNames.WRITER,
-        transport: Transport.TCP,
-        options: { host: 'writer' },
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            clientId: 'api',
+            brokers: ['kafka:9092'],
+          },
+          consumer: {
+            groupId: 'api-consumer',
+          },
+        },
       },
     ]),
   ],
