@@ -93,3 +93,5 @@ Nest is [MIT licensed](LICENSE).
   - [ ] docker for production
   - [ ] docker for running e2e tests
   - [ ] create CI/CD pipelines
+
+Spreadsheet: <https://docs.google.com/spreadsheets/d/1EPsPGMzc_lInQ8CdePUh4rgCLMWOfxFoHcLlfc_Cjl8/edit?usp=sharing>
