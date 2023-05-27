@@ -8,7 +8,7 @@ This project implements a **Google Spreadsheet** writer using [Nest](https://git
 
 You can see the *output spreadsheet* [here](https://docs.google.com/spreadsheets/d/1EPsPGMzc_lInQ8CdePUh4rgCLMWOfxFoHcLlfc_Cjl8/edit?usp=sharing).
 
-https://github.com/marco-souza/spreadsheet-writer/assets/4452113/35ed6fc7-53a5-4ed3-8b7e-2af3ac022599
+https://github.com/marco-souza/spreadsheet-writer/assets/4452113/d8e7f6c3-d438-432c-9b52-befb763c08a0
 
 ### Services diagram
 
