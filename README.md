@@ -2,88 +2,117 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Google Spreadsheet Writer
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project implements a **Google Spreadsheet** writer using [Nest](https://github.com/nestjs/nest) framework with **Kafka** as our transport layer and **Docker** +  **docker-compose** for provisioning our services.
 
-## Description
+You can see the *output spreadsheet* [here](https://docs.google.com/spreadsheets/d/1EPsPGMzc_lInQ8CdePUh4rgCLMWOfxFoHcLlfc_Cjl8/edit?usp=sharing).
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Services diagram
 
-## Installation
-
-```bash
-$ pnpm install
+```mermaid
+%%{init: {'theme':'drak'}}%%
+graph LR;
+  A((api-gateway\nPOST '/'))--emit-->B[kafka-service];
+  B--receive msg-->C((writer-service));
+  C--api call-->D[Google\nSpreadsheet\nAPI];
+  style A fill:#658fEE;
+  style C fill:#658fEE;
+  style B fill:#EE658f;
+  style D fill:#EE658f;
+  style 3P-services fill:#EE658f;
+  style internal-services fill:#658fEE;
 ```
 
-## Running the app
+The diagram above reflects the architecture of this project.
 
-```bash
-# development
-$ pnpm run start
+It has an *api-gateway* which *emits* events to *Kafka*, our transport layer.
 
-# watch mode
-$ pnpm run start:dev
+We also have a *writer-service* listening kafka messages on the same topic that *api-gateway* is emitting events. The writer service will parse messages and then publish it to a given *Google Spreadsheet*, which can be specified inside the `.env`.
 
-# production mode
-$ pnpm run start:prod
+As we'll have a few services, I choose to create a **[Nest.js Monorepo](https://docs.nestjs.com/cli/monorepo)** to separate each service implementation.
+
+## Dependencies
+
+To run this project you'll need to have the following items to your computer:
+
+- `nodejs`
+- `pnpm` - package manager used to develop this project
+- `docker` and `docker-compose` - to provisioning the development environment
+- `ansible-vault` (optional) - used to decrypt the `.env` credentials
+
+## Credentials
+
+To run this project you need to have a `.env` file with the following credentials:
+
+```shell
+# your .env file
+GOOGLE_PRIVATE_KEY="****"
+GOOGLE_SERVICE_ACCOUNT_EMAIL="****"
+GOOGLE_PRIVATE_SPREADSHEET_ID="****"
 ```
 
-## Test
+> **Note**:
+>
+> You also need to invite the application's email to your spreadsheet.
+> Check more details [here](https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication?id=service-account).
+
+If you have the **credentials password**, just decrypt the `.env.encrypted` file to generate my development credentials by running `pnpm decrypt` and inputting the password.
+
+## Usage
+
+This project offers a few handy commands that will help you run and test it.
+
+> **Warning**:
+>
+> This project is not meant to run out of docker, as it manually sets network details that will not work out of docker
+
+The following commands are available:
 
 ```bash
-# unit tests
-$ pnpm run test
+# Docker commands
+pnpm d:up     # alias to docker-compose up
+pnpm d:down   # alias to docker-compose down
+pnpm d:logs   # alias to docker-compose logs
+pnpm d:exec   # alias to docker-compose exec (debug)
 
-# e2e tests
-$ pnpm run test:e2e
+# Useful commands
+pnpm decrypt  # decrypt .env credentials (if you have the password)
 
-# test coverage
-$ pnpm run test:cov
+# Running tests
+pnpm tests api-gateway
+pnpm tests writer
 ```
 
-## Support
+## Implementation Details
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+> TBD
+
+## Next Steps
+
+> TBD
 
 ## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- Author - [Marco Antônio](https://www.linkedin.com/in/masouzajunior/)
+- Website - <https://marco.tremtec.com>
 
-## License
+## References
 
-Nest is [MIT licensed](LICENSE).
+> TBD
 
 ## To Document
 
-- [ ] Description
-  - [ ] Monorepo
-  - [ ] Diagram
-  - [ ] No reply after emit
-- [ ] Dependencies
-  - [ ] `docker`
-  - [ ] `docker-compose`
-  - [ ] `ansible-vault`
-- [ ] Usage
-  - [ ] Setup Google Credentials
+- [x] Description
+  - [x] Monorepo
+  - [x] Diagram
+  - [x] No reply after emit
+- [x] Dependencies
+  - [x] `docker`
+  - [x] `docker-compose`
+  - [x] `ansible-vault`
+- [x] Usage
+  - [x] Setup Google Credentials
 - [ ] Implementation details
   - [ ] Docker + kafka + microservice
   - [ ] kafka + zookeeper
@@ -94,4 +123,3 @@ Nest is [MIT licensed](LICENSE).
   - [ ] docker for running e2e tests
   - [ ] create CI/CD pipelines
 
-Spreadsheet: <https://docs.google.com/spreadsheets/d/1EPsPGMzc_lInQ8CdePUh4rgCLMWOfxFoHcLlfc_Cjl8/edit?usp=sharing>
