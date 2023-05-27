@@ -77,7 +77,9 @@ pnpm d:logs   # alias to docker-compose logs
 pnpm d:exec   # alias to docker-compose exec (debug)
 
 # Useful commands
-pnpm decrypt  # decrypt .env credentials (if you have the password)
+pnpm fmt      # format files
+pnpm lint     # lint projects
+pnpm decrypt  # decrypt .env
 
 # Running tests
 pnpm tests api-gateway
