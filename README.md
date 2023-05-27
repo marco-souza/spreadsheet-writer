@@ -88,40 +88,31 @@ pnpm tests writer
 
 ## Implementation Details
 
-> TBD
+I started the project implementing a [standalone](https://docs.nestjs.com/standalone-applications) Nest.js API that receives a payload, validates it and parse into a CSV.
+
+After finishing this first step, I decided to turn the project into a [monorepo](https://docs.nestjs.com/cli/monorepo), splitting the code into *api-gateway* and *writer* service. These services were communicating initially via TCP.
+
+When I got it working, the next step was to configure kafka, so it was time to containerize the project!
+
+Before even think of integrating kafka, I struggled a little bit with the network "wiring". Nest.js services usually communicates using the hostname `localhost`, but, as I was running multiple containers apps using `docker-compose`, each service has a different hostname (e.g. `api-gateway`, `writer`, `kafka`, so on). I fixed it adjusting the initial TCP setup to use the new hostname.
+
+Great! The app is containerized, now it's time to configure kafka. I used the `bitnami/kafka` image, which also requires a `zookeeper` instance. Kafka uses it to store and manage metadata information about Kafka clusters, and also manage and organize kafka brokers (servers).
+
+After configuring zookeeper and kafka, I needed to configure the Nest.js transport layer to use kafka and refactor the code for connecting on it.
+
+The only part missing now was the Google Spreadsheet integration. I did some research on that and found an interesting library called [`google-spreadsheet`](https://www.npmjs.com/package/google-spreadsheet). I had to create a factory for injecting it as dependency of the `SpreadsheetService`, responsible for adding a row on the specified spreadsheet.
+
+The `GOOGLE_PRIVATE_SPREADSHEET_ID` environment variable can be defined in `.env`. This is the same ID used on the Spreadsheet URL. You also need to invite the `GOOGLE_SERVICE_ACCOUNT_EMAIL` the created spreadsheet - [how to configure google service credentials](https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication?id=service-account).
 
 ## Next Steps
 
-> TBD
+- [ ] more constants
+- [ ] docker for production
+- [ ] docker for running e2e tests
+- [ ] create CI/CD pipelines
 
 ## Stay in touch
 
 - Author - [Marco Antônio](https://www.linkedin.com/in/masouzajunior/)
 - Website - <https://marco.tremtec.com>
-
-## References
-
-> TBD
-
-## To Document
-
-- [x] Description
-  - [x] Monorepo
-  - [x] Diagram
-  - [x] No reply after emit
-- [x] Dependencies
-  - [x] `docker`
-  - [x] `docker-compose`
-  - [x] `ansible-vault`
-- [x] Usage
-  - [x] Setup Google Credentials
-- [ ] Implementation details
-  - [ ] Docker + kafka + microservice
-  - [ ] kafka + zookeeper
-  - [ ] GoogleSpreadsheet lib
-- [ ] Next steps
-  - [ ] more constants
-  - [ ] docker for production
-  - [ ] docker for running e2e tests
-  - [ ] create CI/CD pipelines
 
