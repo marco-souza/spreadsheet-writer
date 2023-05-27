@@ -8,6 +8,8 @@ This project implements a **Google Spreadsheet** writer using [Nest](https://git
 
 You can see the *output spreadsheet* [here](https://docs.google.com/spreadsheets/d/1EPsPGMzc_lInQ8CdePUh4rgCLMWOfxFoHcLlfc_Cjl8/edit?usp=sharing).
 
+https://github.com/marco-souza/spreadsheet-writer/assets/4452113/35ed6fc7-53a5-4ed3-8b7e-2af3ac022599
+
 ### Services diagram
 
 ```mermaid
@@ -129,3 +131,4 @@ The project is working, but we can consider a few follow-upo tasks to improve th
 - Kafka image - <https://hub.docker.com/r/bitnami/kafka/>
 - ZooKeeper image - <https://hub.docker.com/r/bitnami/zookeeper/>
 - Google credentials setup - <https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication?id=service-account>
+
