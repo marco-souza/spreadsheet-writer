@@ -94,7 +94,7 @@ After finishing this first step, I decided to turn the project into a [monorepo]
 
 When I got it working, the next step was to configure kafka, so it was time to containerize the project!
 
-Before even think of integrating kafka, I struggled a little bit with the network "wiring". Nest.js services usually communicates using the hostname `localhost`, but, as I was running multiple containers apps using `docker-compose`, each service has a different hostname (e.g. `api-gateway`, `writer`, `kafka`, so on). I fixed it adjusting the initial TCP setup to use the new hostname.
+Before even think of integrating kafka, I struggled a little bit with the "network wiring". Nest.js services usually communicates using the hostname `localhost`, but, as I was running multiple containers apps using `docker-compose`, each service has a different hostname (e.g. `api-gateway`, `writer`, `kafka`, so on). I fixed it adjusting the initial TCP setup to use the new hostname.
 
 Great! The app is containerized, now it's time to configure kafka. I used the `bitnami/kafka` image, which also requires a `zookeeper` instance. Kafka uses it to store and manage metadata information about Kafka clusters, and also manage and organize kafka brokers (servers).
 
@@ -106,10 +106,14 @@ The `GOOGLE_PRIVATE_SPREADSHEET_ID` environment variable can be defined in `.env
 
 ## Next Steps
 
-- [ ] more constants
-- [ ] docker for production
-- [ ] docker for running e2e tests
-- [ ] create CI/CD pipelines
+The project is working, but we can consider a few follow-upo tasks to improve the code base.
+
+- **move hostname configs to env vars**: To avoid breaking the app when running outside docker we need to move the hard-coded network hostnames to some configurations using the environment variable. Therefore we can customize it using docker-compose.
+- **prepare for production**: The current configuration is for development only. For a production build we need to consider improving our `Dockerfile` to generate a cleaner image, build the app with `NODE_ENV=production` and move the generate image to some Docker Register.
+- **split services dependencies**: This project is too simple to have a complex monorepo, but if we are considering pushing it to production, it would be nice to have one `package.json` by services to split the dependencies. For example, the `google-spreadsheet` module is not a direct dependency of the `api-gateway`, but it'll still be included as a dependencies as it shares the same `package.json` the the `writer` service.
+- **CI/CD automation**: It would be nice to have some workflows as our quality-gateway, enforcing linting rules and working tests. We can also consider having deployment workflows.
+- **configure docker for running e2e test**: This was not configured to run integration tests inside docker, but this would be also a nice to have feature.
+- **improve application logging**: improve the logs and consider adding some log storage service.
 
 ## Stay in touch
 
