@@ -116,3 +116,11 @@ The `GOOGLE_PRIVATE_SPREADSHEET_ID` environment variable can be defined in `.env
 - Author - [Marco Antônio](https://www.linkedin.com/in/masouzajunior/)
 - Website - <https://marco.tremtec.com>
 
+## References
+
+- Nest.js docs - <https://docs.nestjs.com/>
+- Nest.js Monorepo - <https://docs.nestjs.com/cli/monorepo>
+- Nest.js Standalone Apps - <https://docs.nestjs.com/standalone-applications>
+- Kafka image - <https://hub.docker.com/r/bitnami/kafka/>
+- ZooKeeper image - <https://hub.docker.com/r/bitnami/zookeeper/>
+- Google credentials setup - <https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication?id=service-account>
