@@ -71,3 +71,25 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## To Document
+
+- [ ] Description
+  - [ ] Monorepo
+  - [ ] Diagram
+  - [ ] No reply after emit
+- [ ] Dependencies
+  - [ ] `docker`
+  - [ ] `docker-compose`
+  - [ ] `ansible-vault`
+- [ ] Usage
+  - [ ] Setup Google Credentials
+- [ ] Implementation details
+  - [ ] Docker + kafka + microservice
+  - [ ] kafka + zookeeper
+  - [ ] GoogleSpreadsheet lib
+- [ ] Next steps
+  - [ ] more constants
+  - [ ] docker for production
+  - [ ] docker for running e2e tests
+  - [ ] create CI/CD pipelines
