@@ -15,13 +15,13 @@ You can see the *output spreadsheet* [here](https://docs.google.com/spreadsheets
 graph LR;
   A((api-gateway\nPOST '/'))--emit-->B[kafka-service];
   B--receive msg-->C((writer-service));
-  C--api call-->D[Google\nSpreadsheet\nAPI];
-  style A fill:#658fEE;
-  style C fill:#658fEE;
-  style B fill:#EE658f;
-  style D fill:#EE658f;
-  style 3P-services fill:#EE658f;
-  style internal-services fill:#658fEE;
+  C--api call-->D(Google\nSpreadsheet\nAPI);
+  style A fill:#654fFF;
+  style C fill:#654fFF;
+  style B fill:#FF458f;
+  style D fill:#FF458f;
+  style 3P-services fill:#FF458f;
+  style internal-services fill:#654fFF;
 ```
 
 The diagram above reflects the architecture of this project.
