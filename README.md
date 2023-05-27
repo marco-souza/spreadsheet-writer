@@ -88,6 +88,22 @@ pnpm tests api-gateway
 pnpm tests writer
 ```
 
+After starting the project using `pnpm d:up`, you can make a API Call for adding data to the Spreadsheet:
+
+```sh
+curl -X POST http://localhost:3000 \
+   -H 'Content-Type: application/json' \
+   -d '{
+    "date": "2012-04-23T18:25:43.511Z",
+    "message": "hello",
+    "payload": {
+        "light": 1,
+        "color": "#FFEE00"
+    },
+    "internet": true
+  }'
+```
+
 ## Implementation Details
 
 I started the project implementing a [standalone](https://docs.nestjs.com/standalone-applications) Nest.js API that receives a payload, validates it and parse into a CSV.
@@ -130,5 +146,6 @@ The project is working, but we can consider a few follow-upo tasks to improve th
 - Nest.js Standalone Apps - <https://docs.nestjs.com/standalone-applications>
 - Kafka image - <https://hub.docker.com/r/bitnami/kafka/>
 - ZooKeeper image - <https://hub.docker.com/r/bitnami/zookeeper/>
+- Google Spreadsheet - <https://www.npmjs.com/package/google-spreadsheet>
 - Google credentials setup - <https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication?id=service-account>
 
