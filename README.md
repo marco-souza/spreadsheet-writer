@@ -65,7 +65,7 @@ This project offers a few handy commands that will help you run and test it.
 
 > **Warning**:
 >
-> This project is not meant to run out of docker, as it manually sets network details that will not work out of docker
+> This project is not meant to run **outside docker** as the network hostname are manually defined.
 
 The following commands are available:
 
