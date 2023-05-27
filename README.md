@@ -124,6 +124,7 @@ The project is working, but we can consider a few follow-upo tasks to improve th
 
 - Nest.js docs - <https://docs.nestjs.com/>
 - Nest.js Monorepo - <https://docs.nestjs.com/cli/monorepo>
+- Nest.js Kafka - <https://docs.nestjs.com/microservices/kafka>
 - Nest.js Standalone Apps - <https://docs.nestjs.com/standalone-applications>
 - Kafka image - <https://hub.docker.com/r/bitnami/kafka/>
 - ZooKeeper image - <https://hub.docker.com/r/bitnami/zookeeper/>
